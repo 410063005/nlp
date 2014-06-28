@@ -19,14 +19,14 @@ public class TencentLocationService extends Service {
 			.getSimpleName();
 
 	@Override
-	public IBinder onBind(Intent intent) {
+	public synchronized IBinder onBind(Intent intent) {
 		if (intent == null) {
 			return null;
 		}
 		String action = intent.getAction();
 		Dbg.i(TAG, "on bind: " + action);
 		if (ACTION_LOCATION.equals(action)) {
-			return new TencentLocationProvider().getBinder();
+			return new TencentLocationProvider(this).getBinder();
 		} else if (ACTION_GEOCODE.equals(action)) {
 			return new TencentGeocodeProvider().getBinder();
 		} else if (ACTION_LOCATION_V2.equals(action)) {
