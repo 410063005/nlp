@@ -10,6 +10,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.os.WorkSource;
 import android.provider.Settings;
 
@@ -23,6 +24,13 @@ public class TencentLocationProvider extends BaseTencentLocationProvider {
 	private static TencentLocationProvider sInstance;
 	private final Context mContext;
 	private final ProviderHandler mHandler;
+
+	private final Object mLock = new Object();
+	// private boolean mStarted;
+	private int mMinTimeSeconds = 2147483647;
+	private int mNetworkState;
+	private int mStatus = 2;
+	private long mStatusUpdateTime = 0L;
 
 	public TencentLocationProvider(Context context) {
 		super();
@@ -41,16 +49,17 @@ public class TencentLocationProvider extends BaseTencentLocationProvider {
 		}
 	}
 
+	private void updateStatusLocked(int newStatus) {
+		if (this.mStatus != newStatus) {
+			this.mStatus = newStatus;
+			this.mStatusUpdateTime = SystemClock.elapsedRealtime();
+		}
+	}
+
 	public static void userConfirm(boolean enabled) {
 		if (sInstance != null) {
 			sInstance.userConfirm0(enabled);
 		}
-	}
-
-	@Override
-	public void onAddListener(int arg0, WorkSource arg1) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -96,12 +105,6 @@ public class TencentLocationProvider extends BaseTencentLocationProvider {
 	}
 
 	@Override
-	public void onRemoveListener(int arg0, WorkSource arg1) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void onSetMinTime(long arg0, WorkSource arg1) {
 		// TODO Auto-generated method stub
 
@@ -142,6 +145,12 @@ public class TencentLocationProvider extends BaseTencentLocationProvider {
 	private final class ProviderHandler extends Handler {
 		private static final int MSG_ID_DISABLE = 2;
 		private static final int MSG_ID_ENABLE = 1;
+		private static final int MSG_ID_ADD_LISTENER = 3;
+		private static final int MSG_ID_REMOVE_LISTENER = 4;
+		private static final int MSG_ID_ENABLE_LOCATION_TRACKING = 5;
+		private static final int MSG_ID_GET_INTERNAL_STATE = 6;
+		private static final int MSG_ID_SET_MIN_TIME = 7;
+		private static final int MSG_ID_UPDATE_LOCATION = 8;
 
 		private ProviderHandler() {
 		}
