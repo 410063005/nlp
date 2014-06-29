@@ -48,7 +48,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		mHandler = new ProviderHandler();
 		mLocationManager = TencentLocationManager.getInstance(context);
 		mLocationManager
-				.setCoordinateType(TencentLocationManager.COORDINATE_TYPE_WGS84);
+				.setCoordinateType(TencentLocationManager.COORDINATE_TYPE_GCJ02);
 		// TODO 哪个坐标系??
 		mLocationRequest = TencentLocationRequest.create().setRequestLevel(
 				TencentLocationRequest.REQUEST_LEVEL_GEO);
@@ -238,8 +238,13 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 			// important 调整定位周期
 			int i = mMinTimeSeconds;
 			Dbg.i(TAG, "set min time of tencent sdk to " + i + "s");
-			mLocationManager.requestLocationUpdates(
-					mLocationRequest.setInterval(i * 1000), this);
+
+			if (i > 3600) {
+				mLocationManager.removeUpdates(this); // 周期太长的话, 直接取消定位
+			} else {
+				mLocationManager.requestLocationUpdates(
+						mLocationRequest.setInterval(i * 1000), this);
+			}
 		}
 	}
 
