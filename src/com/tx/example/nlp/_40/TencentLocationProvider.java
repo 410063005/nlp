@@ -81,8 +81,7 @@ public class TencentLocationProvider extends LocationProvider {
 
 	@Override
 	public int onGetAccuracy() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Criteria.ACCURACY_FINE; // 准确度较好
 	}
 
 	@Override
@@ -93,8 +92,7 @@ public class TencentLocationProvider extends LocationProvider {
 
 	@Override
 	public int onGetPowerRequirement() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Criteria.POWER_LOW; // 低耗时
 	}
 
 	@Override
@@ -111,14 +109,12 @@ public class TencentLocationProvider extends LocationProvider {
 
 	@Override
 	public boolean onHasMonetaryCost() {
-		// TODO Auto-generated method stub
-		return false;
+		return false; // trick, 网络定位一般会耗流量从而引起资费, 但认为资费相当小
 	}
 
 	@Override
-	public boolean onMeetsCriteria(Criteria arg0) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean onMeetsCriteria(Criteria criteria) {
+		return true; // trick, 认为我们可以满足任何条件
 	}
 
 	@Override
@@ -129,26 +125,22 @@ public class TencentLocationProvider extends LocationProvider {
 
 	@Override
 	public boolean onRequiresCell() {
-		// TODO Auto-generated method stub
-		return false;
+		return true; // 需要 cell
 	}
 
 	@Override
 	public boolean onRequiresNetwork() {
-		// TODO Auto-generated method stub
-		return false;
+		return true; // 需要 network
 	}
 
 	@Override
 	public boolean onRequiresSatellite() {
-		// TODO Auto-generated method stub
-		return false;
+		return false; // 不需要卫星
 	}
 
 	@Override
 	public boolean onSendExtraCommand(String arg0, Bundle arg1) {
-		// TODO Auto-generated method stub
-		return false;
+		return false; // 不支持 extra command
 	}
 
 	@Override
@@ -159,20 +151,17 @@ public class TencentLocationProvider extends LocationProvider {
 
 	@Override
 	public boolean onSupportsAltitude() {
-		// TODO Auto-generated method stub
-		return false;
+		return false; // 不支持海拔
 	}
 
 	@Override
 	public boolean onSupportsBearing() {
-		// TODO Auto-generated method stub
-		return false;
+		return false; // 不支持方向
 	}
 
 	@Override
 	public boolean onSupportsSpeed() {
-		// TODO Auto-generated method stub
-		return false;
+		return false; // 不支持速度
 	}
 
 	@Override
