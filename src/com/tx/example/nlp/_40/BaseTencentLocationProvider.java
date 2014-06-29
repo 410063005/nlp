@@ -1,9 +1,7 @@
 package com.tx.example.nlp._40;
 
 import android.location.Criteria;
-import android.os.Binder;
 import android.os.Bundle;
-import android.os.WorkSource;
 
 import com.android.location.provider.LocationProvider;
 
@@ -17,16 +15,6 @@ public abstract class BaseTencentLocationProvider extends LocationProvider {
 
 	public BaseTencentLocationProvider() {
 		super();
-	}
-
-	@Override
-	public void onRemoveListener(int arg0, WorkSource arg1) {
-		Binder.clearCallingIdentity();
-	}
-
-	@Override
-	public void onAddListener(int arg0, WorkSource arg1) {
-		Binder.clearCallingIdentity();
 	}
 
 	@Override

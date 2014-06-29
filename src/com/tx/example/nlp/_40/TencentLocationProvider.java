@@ -1,5 +1,7 @@
 package com.tx.example.nlp._40;
 
+import java.util.HashSet;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -14,16 +16,24 @@ import android.os.SystemClock;
 import android.os.WorkSource;
 import android.provider.Settings;
 
+import com.tencent.map.geolocation.TencentLocation;
+import com.tencent.map.geolocation.TencentLocationListener;
+import com.tencent.map.geolocation.TencentLocationManager;
+import com.tencent.map.geolocation.TencentLocationRequest;
 import com.tx.example.nlp.AlertActivity;
 import com.tx.example.nlp.Dbg;
 
-public class TencentLocationProvider extends BaseTencentLocationProvider {
+public class TencentLocationProvider extends BaseTencentLocationProvider
+		implements TencentLocationListener {
 	private static final String TAG = TencentLocationProvider.class
 			.getSimpleName();
 
 	private static TencentLocationProvider sInstance;
 	private final Context mContext;
 	private final ProviderHandler mHandler;
+	private final TencentLocationManager mLocationManager;
+	private final TencentLocationRequest mLocationRequest;
+	private final HashSet<Integer> mListenerIds;
 
 	private final Object mLock = new Object();
 	// private boolean mStarted;
@@ -36,6 +46,14 @@ public class TencentLocationProvider extends BaseTencentLocationProvider {
 		super();
 		mContext = context;
 		mHandler = new ProviderHandler();
+		mLocationManager = TencentLocationManager.getInstance(context);
+		mLocationManager
+				.setCoordinateType(TencentLocationManager.COORDINATE_TYPE_WGS84);
+		// TODO 哪个坐标系??
+		mLocationRequest = TencentLocationRequest.create().setRequestLevel(
+				TencentLocationRequest.REQUEST_LEVEL_GEO);
+		mListenerIds = new HashSet<Integer>();
+
 		sInstance = this; // trick
 	}
 
@@ -72,7 +90,6 @@ public class TencentLocationProvider extends BaseTencentLocationProvider {
 
 	@Override
 	public void onEnable() {
-		// TODO Auto-generated method stub
 		Dbg.i(TAG, "on enable", true);
 
 		Binder.clearCallingIdentity();
@@ -81,9 +98,16 @@ public class TencentLocationProvider extends BaseTencentLocationProvider {
 	}
 
 	@Override
-	public void onEnableLocationTracking(boolean arg0) {
-		// TODO Auto-generated method stub
+	public void onEnableLocationTracking(boolean enabled) {
+		Binder.clearCallingIdentity();
+		if (enabled) {
 
+			// TODO important 调整定位周期
+
+			synchronized (mLock) {
+				updateStatusLocked(2);
+			}
+		}
 	}
 
 	@Override
@@ -94,32 +118,102 @@ public class TencentLocationProvider extends BaseTencentLocationProvider {
 
 	@Override
 	public int onGetStatus(Bundle arg0) {
-		// TODO Auto-generated method stub
-		return 0;
+		Binder.clearCallingIdentity();
+
+		synchronized (mLock) {
+			return mStatus;
+		}
 	}
 
 	@Override
 	public long onGetStatusUpdateTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		Binder.clearCallingIdentity();
+
+		synchronized (mLock) {
+			return mStatusUpdateTime;
+		}
 	}
 
 	@Override
-	public void onSetMinTime(long arg0, WorkSource arg1) {
-		// TODO Auto-generated method stub
+	public void onSetMinTime(long minTime, WorkSource arg1) {
+		Binder.clearCallingIdentity();
+		long l = minTime / 1000L;
+		int i = (int) l;
+		if (l != i) {
+			throw new RuntimeException("minTime is too big " + l);
+		}
+		synchronized (this.mLock) {
+			this.mMinTimeSeconds = Math.max(i, 20);
+			Message.obtain(this.mHandler, ProviderHandler.MSG_ID_SET_MIN_TIME)
+					.sendToTarget();
+		}
 
 	}
 
 	@Override
-	public void onUpdateLocation(Location arg0) {
-		// TODO Auto-generated method stub
-
+	public void onUpdateLocation(Location location) {
+		if (location == null) {
+			return;
+		}
+		if (LocationManager.GPS_PROVIDER.equals(location.getProvider())) {
+			// TODO 系统可能将gps等其他模块的定位结果通过这个接口传入进来
+			// TODO
+		}
 	}
 
 	@Override
-	public void onUpdateNetworkState(int arg0, NetworkInfo arg1) {
-		// TODO Auto-generated method stub
+	public void onLocationChanged(TencentLocation location, int error,
+			String reason) {
+		// tencent 定位sdk的结果
+		Dbg.i(TAG, "tencent location result: " + error);
+		if (error == 0) {
+			Location l = new Location(LocationManager.NETWORK_PROVIDER);
+			l.setLatitude(location.getLatitude());
+			l.setLongitude(location.getLongitude());
+			l.setAltitude(location.getAltitude());
+			l.setAccuracy(location.getAccuracy());
+			l.setTime(location.getTime());
+			reportLocation(l); // 向系统汇报
+		}
+	}
 
+	@Override
+	public void onStatusUpdate(String name, int status, String desc) {
+		// ignore
+		// TODO
+	}
+
+	// FIXME 如果我们的sdk足够灵活, 比如能支持"长时间暂停", 完全可以不必实现这两个方法
+	@Override
+	public void onRemoveListener(int arg0, WorkSource arg1) {
+		Binder.clearCallingIdentity();
+		synchronized (mLock) {
+			mListenerIds.remove(arg0);
+			if (mListenerIds.size() == 0) {
+				Dbg.i(TAG, "stop tencent location sdk");
+				mLocationManager.removeUpdates(this); // 停止定位
+			}
+		}
+	}
+
+	@Override
+	public void onAddListener(int arg0, WorkSource arg1) {
+		Binder.clearCallingIdentity();
+		synchronized (mLock) {
+			mListenerIds.add(arg0);
+			if (mStatus == 2) {
+				mLocationManager.requestLocationUpdates(mLocationRequest, this);
+			}
+		}
+	}
+
+	@Override
+	public void onUpdateNetworkState(int state, NetworkInfo info) {
+		Binder.clearCallingIdentity();
+		synchronized (mLock) {
+			mNetworkState = state;
+			updateStatusLocked(state);
+		}
 	}
 
 	private void handleEnable() {
@@ -135,21 +229,30 @@ public class TencentLocationProvider extends BaseTencentLocationProvider {
 		Dbg.i(TAG, "handle disable");
 
 		userConfirm0(false);
+		// TODO
+		updateStatusLocked(1);
 	}
 
 	private void handleSetMinTime() {
-
+		synchronized (mLock) {
+			// important 调整定位周期
+			int i = mMinTimeSeconds;
+			Dbg.i(TAG, "set min time of tencent sdk to " + i + "s");
+			mLocationManager.requestLocationUpdates(
+					mLocationRequest.setInterval(i * 1000), this);
+		}
 	}
 
 	@SuppressLint("HandlerLeak")
 	private final class ProviderHandler extends Handler {
 		private static final int MSG_ID_DISABLE = 2;
 		private static final int MSG_ID_ENABLE = 1;
-		private static final int MSG_ID_ADD_LISTENER = 3;
+		private static final int MSG_ID_SET_MIN_TIME = 3;
+
+		private static final int MSG_ID_ADD_LISTENER = 7;
 		private static final int MSG_ID_REMOVE_LISTENER = 4;
 		private static final int MSG_ID_ENABLE_LOCATION_TRACKING = 5;
 		private static final int MSG_ID_GET_INTERNAL_STATE = 6;
-		private static final int MSG_ID_SET_MIN_TIME = 7;
 		private static final int MSG_ID_UPDATE_LOCATION = 8;
 
 		private ProviderHandler() {
