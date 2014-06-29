@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.google.android.location"
-    android:versionCode="5"
+    android:versionCode="15"
     android:versionName="1.0" xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
@@ -55,6 +55,9 @@
         </activity>
         <activity android:theme="@style/AppTheme.Transparent" android:name="com.tx.example.nlp.AlertActivity" 
             android:excludeFromRecents="true" android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity android:name="com.tx.example.nlp.TestLocationActivity" />
+        <activity android:name="com.tx.example.nlp.TestGeocodeActivity" />
+        <activity android:name="com.tx.example.nlp.TestRgeocodeActivity" />
 
         <service android:name="com.tx.example.nlp.TencentLocationService" >
             <intent-filter>
