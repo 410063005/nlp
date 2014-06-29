@@ -28,7 +28,7 @@ public class TencentLocationService extends Service {
 		if (ACTION_LOCATION.equals(action)) {
 			return new TencentLocationProvider(this).getBinder();
 		} else if (ACTION_GEOCODE.equals(action)) {
-			return new TencentGeocodeProvider().getBinder();
+			return new TencentGeocodeProvider(this).getBinder();
 		} else if (ACTION_LOCATION_V2.equals(action)) {
 			return new com.tx.example.nlp._42.TencentLocationProvider("", null).getBinder();
 		} else if (ACTION_GEOCODE_V2.equals(action)) {
