@@ -3,7 +3,6 @@ package com.tx.example.nlp._40;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.NetworkInfo;
@@ -14,11 +13,10 @@ import android.os.Message;
 import android.os.WorkSource;
 import android.provider.Settings;
 
-import com.android.location.provider.LocationProvider;
 import com.tx.example.nlp.AlertActivity;
 import com.tx.example.nlp.Dbg;
 
-public class TencentLocationProvider extends LocationProvider {
+public class TencentLocationProvider extends BaseTencentLocationProvider {
 	private static final String TAG = TencentLocationProvider.class
 			.getSimpleName();
 
@@ -80,19 +78,9 @@ public class TencentLocationProvider extends LocationProvider {
 	}
 
 	@Override
-	public int onGetAccuracy() {
-		return Criteria.ACCURACY_FINE; // 准确度较好
-	}
-
-	@Override
 	public String onGetInternalState() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public int onGetPowerRequirement() {
-		return Criteria.POWER_LOW; // 低耗时
 	}
 
 	@Override
@@ -108,60 +96,15 @@ public class TencentLocationProvider extends LocationProvider {
 	}
 
 	@Override
-	public boolean onHasMonetaryCost() {
-		return false; // trick, 网络定位一般会耗流量从而引起资费, 但认为资费相当小
-	}
-
-	@Override
-	public boolean onMeetsCriteria(Criteria criteria) {
-		return true; // trick, 认为我们可以满足任何条件
-	}
-
-	@Override
 	public void onRemoveListener(int arg0, WorkSource arg1) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public boolean onRequiresCell() {
-		return true; // 需要 cell
-	}
-
-	@Override
-	public boolean onRequiresNetwork() {
-		return true; // 需要 network
-	}
-
-	@Override
-	public boolean onRequiresSatellite() {
-		return false; // 不需要卫星
-	}
-
-	@Override
-	public boolean onSendExtraCommand(String arg0, Bundle arg1) {
-		return false; // 不支持 extra command
-	}
-
-	@Override
 	public void onSetMinTime(long arg0, WorkSource arg1) {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public boolean onSupportsAltitude() {
-		return false; // 不支持海拔
-	}
-
-	@Override
-	public boolean onSupportsBearing() {
-		return false; // 不支持方向
-	}
-
-	@Override
-	public boolean onSupportsSpeed() {
-		return false; // 不支持速度
 	}
 
 	@Override
