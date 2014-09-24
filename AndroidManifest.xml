@@ -54,7 +54,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.tx.example.nlp.ui.TestLocationActivityity" />
+        <activity android:name="com.tx.example.nlp.ui.TestLocationActivity" />
         <activity android:name="com.tx.example.nlp.ui.TestGeocodeActivity" />
         <activity android:name="com.tx.example.nlp.ui.TestRgeocodeActivity" />
         <!-- use for test only -->
