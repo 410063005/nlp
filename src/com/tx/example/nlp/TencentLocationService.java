@@ -9,12 +9,6 @@ import com.tx.example.nlp._40.TencentLocationProvider;
 
 public class TencentLocationService extends Service {
 
-	private static final String ACTION_GEOCODE = "com.google.android.location.GeocodeProvider";
-	private static final String ACTION_LOCATION = "com.google.android.location.NetworkLocationProvider";
-
-	private static final String ACTION_GEOCODE_V2 = "com.google.android.location.v2.GeocodeProvider";
-	private static final String ACTION_LOCATION_V2 = "com.google.android.location.v2.NetworkLocationProvider";
-
 	private static final String TAG = "TencentLocationService";
 
 	@Override
@@ -25,16 +19,16 @@ public class TencentLocationService extends Service {
 		String action = intent.getAction();
 		Dbg.i(TAG, "onBind: action=" + action);
 
-		if (ACTION_LOCATION.equals(action)) {
+		if (Actions.V.LOCATION.equals(action)) {
 			return new TencentLocationProvider(this).getBinder();
 
-		} else if (ACTION_GEOCODE.equals(action)) {
+		} else if (Actions.V.GEOCODE.equals(action)) {
 			return new TencentGeocodeProvider(this).getBinder();
 
-		} else if (ACTION_LOCATION_V2.equals(action)) {
+		} else if (Actions.V2.LOCATION.equals(action)) {
 			return new com.tx.example.nlp._42.TencentLocationProvider("", null).getBinder();
 
-		} else if (ACTION_GEOCODE_V2.equals(action)) {
+		} else if (Actions.V2.GEOCODE.equals(action)) {
 			return new com.tx.example.nlp._42.TencentGeocodeProvider().getBinder();
 
 		} else {
