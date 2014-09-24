@@ -15,4 +15,8 @@ public class Dbg {
 			Log.i(tag, msg);
 		}
 	}
+
+	public static void e(String tag, String msg) {
+		Log.e(tag, msg);
+	}
 }
