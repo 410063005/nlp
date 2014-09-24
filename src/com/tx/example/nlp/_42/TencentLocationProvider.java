@@ -6,7 +6,7 @@ import android.os.WorkSource;
 import com.android.location.provider.LocationProviderBase;
 import com.android.location.provider.ProviderPropertiesUnbundled;
 import com.android.location.provider.ProviderRequestUnbundled;
-import com.tx.example.nlp.Dbg;
+import com.tx.example.nlp.Debug;
 
 public class TencentLocationProvider extends LocationProviderBase {
 	private static final String TAG = TencentLocationProvider.class.getSimpleName();
@@ -19,13 +19,13 @@ public class TencentLocationProvider extends LocationProviderBase {
 	@Override
 	public void onDisable() {
 		// TODO Auto-generated method stub
-		Dbg.i(TAG, "on disable");
+		Debug.i(TAG, "on disable");
 	}
 
 	@Override
 	public void onEnable() {
 		// TODO Auto-generated method stub
-		Dbg.i(TAG, "on enable");
+		Debug.i(TAG, "on enable");
 	}
 
 	@Override

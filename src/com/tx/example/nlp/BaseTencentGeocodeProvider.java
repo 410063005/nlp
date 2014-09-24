@@ -7,7 +7,7 @@ import android.location.GeocoderParams;
 
 import com.android.location.provider.GeocodeProvider;
 
-public abstract class AbsTencentGeocodeProvider extends GeocodeProvider {
+public abstract class BaseTencentGeocodeProvider extends GeocodeProvider {
 
 	@Override
 	public String onGetFromLocation(double arg0, double arg1, int arg2,

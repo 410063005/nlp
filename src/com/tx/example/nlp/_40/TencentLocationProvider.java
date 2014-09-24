@@ -21,7 +21,7 @@ import com.tencent.map.geolocation.TencentLocationListener;
 import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
 import com.tx.example.nlp.AlertActivity;
-import com.tx.example.nlp.Dbg;
+import com.tx.example.nlp.Debug;
 
 public class TencentLocationProvider extends BaseTencentLocationProvider
 		implements TencentLocationListener {
@@ -60,7 +60,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 
 	@Override
 	public void onDisable() {
-		Dbg.i(TAG, "onDisable", true);
+		Debug.i(TAG, "onDisable", true);
 
 		Binder.clearCallingIdentity();
 		mHandler.obtainMessage(ProviderHandler.MSG_ID_DISABLE).sendToTarget();
@@ -68,7 +68,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 
 	@Override
 	public void onEnable() {
-		Dbg.i(TAG, "onEnable", true);
+		Debug.i(TAG, "onEnable", true);
 
 		Binder.clearCallingIdentity();
 		// maybe called from a non-main thread
@@ -145,11 +145,11 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		Binder.clearCallingIdentity();
 		synchronized (mLock) {
 			mListenerIds.remove(arg0);
-			Dbg.i(TAG, "onRemoveListener");
+			Debug.i(TAG, "onRemoveListener");
 
 			if (mListenerIds.size() == 0) {
 				mLocationManager.removeUpdates(this); // 停止定位
-				Dbg.i(TAG, "onRemoveListener: stop location");
+				Debug.i(TAG, "onRemoveListener: stop location");
 			}
 		}
 	}
@@ -178,7 +178,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	public void onLocationChanged(TencentLocation location, int error,
 			String reason) {
 		// tencent 定位sdk的结果
-		Dbg.i(TAG, "onLocationChanged: tencent location error = " + error);
+		Debug.i(TAG, "onLocationChanged: tencent location error = " + error);
 		if (error == 0) {
 			Location l = new Location(LocationManager.NETWORK_PROVIDER);
 			l.setLatitude(location.getLatitude());
@@ -197,7 +197,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 
 	private void handleEnable() {
 		// TODO 兼容 google 应用
-		Dbg.i(TAG, "handleEnable: start AlertActivity");
+		Debug.i(TAG, "handleEnable: start AlertActivity");
 
 		Intent intent = new Intent(mContext, AlertActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -205,7 +205,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	}
 
 	private void handleDisable() {
-		Dbg.i(TAG, "handleDisable");
+		Debug.i(TAG, "handleDisable");
 
 		userConfirm0(false);
 		// TODO
@@ -216,7 +216,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		synchronized (mLock) {
 			// important 调整定位周期
 			int i = mMinTimeSeconds;
-			Dbg.i(TAG, "handleSetMinTime: set min time to " + i + "s");
+			Debug.i(TAG, "handleSetMinTime: set min time to " + i + "s");
 
 			if (i > 3600) {
 				mLocationManager.removeUpdates(this); // 周期太长的话, 直接取消定位

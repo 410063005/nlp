@@ -14,10 +14,10 @@ import com.tencent.tencentmap.mapsdk.search.PoiResults;
 import com.tencent.tencentmap.mapsdk.search.PoiSearch;
 import com.tencent.tencentmap.mapsdk.search.ReGeocoderResult;
 import com.tencent.tencentmap.mapsdk.search.ReGeocoderResult.ReGeocoderAddress;
-import com.tx.example.nlp.AbsTencentGeocodeProvider;
-import com.tx.example.nlp.Dbg;
+import com.tx.example.nlp.BaseTencentGeocodeProvider;
+import com.tx.example.nlp.Debug;
 
-public class TencentGeocodeProvider extends AbsTencentGeocodeProvider {
+public class TencentGeocodeProvider extends BaseTencentGeocodeProvider {
 
 	private static final String TAG = TencentGeocodeProvider.class
 			.getSimpleName();
@@ -28,7 +28,7 @@ public class TencentGeocodeProvider extends AbsTencentGeocodeProvider {
 	public TencentGeocodeProvider(Context context) {
 		super();
 		mContext = context;
-		Dbg.i(TAG, "geocode provider created");
+		Debug.i(TAG, "geocode provider created");
 	}
 
 	@Override
@@ -39,9 +39,9 @@ public class TencentGeocodeProvider extends AbsTencentGeocodeProvider {
 		if (maxResult < 0) {
 			return null;
 		}
-		Dbg.i(TAG, "thead: " + Thread.currentThread().getName());
-		Dbg.i(TAG, "(" + lat + "," + lng + ")");
-		Dbg.i(TAG, "max results: " + maxResult);
+		Debug.i(TAG, "thead: " + Thread.currentThread().getName());
+		Debug.i(TAG, "(" + lat + "," + lng + ")");
+		Debug.i(TAG, "max results: " + maxResult);
 		GeoPoint geoRegeocoder = new GeoPoint((int) (lat * 1e6),
 				(int) (lng * 1e6));
 		ReGeocoderResult result = null;
@@ -75,8 +75,8 @@ public class TencentGeocodeProvider extends AbsTencentGeocodeProvider {
 			return;
 		}
 
-		Dbg.i(TAG, "geo result: " + result.addresslist);
-		Dbg.i(TAG, "geo result: " + result.poilist);
+		Debug.i(TAG, "geo result: " + result.addresslist);
+		Debug.i(TAG, "geo result: " + result.poilist);
 
 		if (result != null && result.addresslist != null
 				&& result.addresslist.size() > 0) {
@@ -142,10 +142,10 @@ public class TencentGeocodeProvider extends AbsTencentGeocodeProvider {
 		upperRightLatitude = 53;
 		upperRightLongitude = 163;
 
-		Dbg.i(TAG, "thead: " + Thread.currentThread().getName());
-		Dbg.i(TAG, "max results: " + maxResults);
-		Dbg.i(TAG, "location name: " + locationName);
-		Dbg.i(TAG, "(" + lowerLeftLatitude + "," + lowerLeftLongitude + "), ("
+		Debug.i(TAG, "thead: " + Thread.currentThread().getName());
+		Debug.i(TAG, "max results: " + maxResults);
+		Debug.i(TAG, "location name: " + locationName);
+		Debug.i(TAG, "(" + lowerLeftLatitude + "," + lowerLeftLongitude + "), ("
 				+ upperRightLatitude + "," + upperRightLongitude + ")");
 
 		GeoPoint lowerLeft = new GeoPoint((int) (lowerLeftLatitude * 1E6),
@@ -182,7 +182,7 @@ public class TencentGeocodeProvider extends AbsTencentGeocodeProvider {
 			return;
 		}
 
-		Dbg.i(TAG, "poi result: " + result.getCurrentPagePoiItems());
+		Debug.i(TAG, "poi result: " + result.getCurrentPagePoiItems());
 		if (result != null && result.getCurrentPagePoiItems() != null) {
 			List<PoiItem> items = result.getCurrentPagePoiItems();
 			for (PoiItem item : items) {

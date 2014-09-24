@@ -17,7 +17,7 @@ public class TencentLocationService extends Service {
 			return null;
 		}
 		String action = intent.getAction();
-		Dbg.i(TAG, "onBind: action=" + action);
+		Debug.i(TAG, "onBind: action=" + action);
 
 		if (Actions.V.LOCATION.equals(action)) {
 			return new TencentLocationProvider(this).getBinder();
@@ -32,7 +32,7 @@ public class TencentLocationService extends Service {
 			return new com.tx.example.nlp._42.TencentGeocodeProvider().getBinder();
 
 		} else {
-			Dbg.e(TAG, "onBind: unknow action " + action);
+			Debug.e(TAG, "onBind: unknow action " + action);
 		}
 
 		return null;
