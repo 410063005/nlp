@@ -25,10 +25,10 @@ import com.tx.example.nlp.Dbg;
 
 public class TencentLocationProvider extends BaseTencentLocationProvider
 		implements TencentLocationListener {
-	private static final String TAG = TencentLocationProvider.class
-			.getSimpleName();
+	private static final String TAG = "TencentLocationProvider";
 
 	private static TencentLocationProvider sInstance;
+
 	private final Context mContext;
 	private final ProviderHandler mHandler;
 	private final TencentLocationManager mLocationManager;
@@ -44,45 +44,23 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 
 	public TencentLocationProvider(Context context) {
 		super();
+
+		// init final fields
 		mContext = context;
 		mHandler = new ProviderHandler();
 		mLocationManager = TencentLocationManager.getInstance(context);
-		mLocationManager
-				.setCoordinateType(TencentLocationManager.COORDINATE_TYPE_GCJ02);
-		// TODO 哪个坐标系??
 		mLocationRequest = TencentLocationRequest.create().setRequestLevel(
 				TencentLocationRequest.REQUEST_LEVEL_GEO);
 		mListenerIds = new HashSet<Integer>();
 
+		// TODO 哪个坐标系??
+
 		sInstance = this; // trick
-	}
-
-	private void userConfirm0(boolean enabled) {
-		Settings.Secure.setLocationProviderEnabled(
-				mContext.getContentResolver(),
-				LocationManager.NETWORK_PROVIDER, enabled);
-		if (enabled) {
-			// setUserConfirmedPreference(true);
-			// TODO
-		}
-	}
-
-	private void updateStatusLocked(int newStatus) {
-		if (this.mStatus != newStatus) {
-			this.mStatus = newStatus;
-			this.mStatusUpdateTime = SystemClock.elapsedRealtime();
-		}
-	}
-
-	public static void userConfirm(boolean enabled) {
-		if (sInstance != null) {
-			sInstance.userConfirm0(enabled);
-		}
 	}
 
 	@Override
 	public void onDisable() {
-		Dbg.i(TAG, "on disable", true);
+		Dbg.i(TAG, "onDisable", true);
 
 		Binder.clearCallingIdentity();
 		mHandler.obtainMessage(ProviderHandler.MSG_ID_DISABLE).sendToTarget();
@@ -90,7 +68,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 
 	@Override
 	public void onEnable() {
-		Dbg.i(TAG, "on enable", true);
+		Dbg.i(TAG, "onEnable", true);
 
 		Binder.clearCallingIdentity();
 		// maybe called from a non-main thread
@@ -140,7 +118,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		long l = minTime / 1000L;
 		int i = (int) l;
 		if (l != i) {
-			throw new RuntimeException("minTime is too big " + l);
+			throw new RuntimeException("onSetMinTime: minTime is too big " + l);
 		}
 		synchronized (this.mLock) {
 			this.mMinTimeSeconds = Math.max(i, 20);
@@ -161,37 +139,17 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		}
 	}
 
-	@Override
-	public void onLocationChanged(TencentLocation location, int error,
-			String reason) {
-		// tencent 定位sdk的结果
-		Dbg.i(TAG, "tencent location result: " + error);
-		if (error == 0) {
-			Location l = new Location(LocationManager.NETWORK_PROVIDER);
-			l.setLatitude(location.getLatitude());
-			l.setLongitude(location.getLongitude());
-			l.setAltitude(location.getAltitude());
-			l.setAccuracy(location.getAccuracy());
-			l.setTime(location.getTime());
-			reportLocation(l); // 向系统汇报
-		}
-	}
-
-	@Override
-	public void onStatusUpdate(String name, int status, String desc) {
-		// ignore
-		// TODO
-	}
-
 	// FIXME 如果我们的sdk足够灵活, 比如能支持"长时间暂停", 完全可以不必实现这两个方法
 	@Override
 	public void onRemoveListener(int arg0, WorkSource arg1) {
 		Binder.clearCallingIdentity();
 		synchronized (mLock) {
 			mListenerIds.remove(arg0);
+			Dbg.i(TAG, "onRemoveListener");
+
 			if (mListenerIds.size() == 0) {
-				Dbg.i(TAG, "stop tencent location sdk");
 				mLocationManager.removeUpdates(this); // 停止定位
+				Dbg.i(TAG, "onRemoveListener: stop location");
 			}
 		}
 	}
@@ -216,9 +174,30 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		}
 	}
 
+	@Override
+	public void onLocationChanged(TencentLocation location, int error,
+			String reason) {
+		// tencent 定位sdk的结果
+		Dbg.i(TAG, "onLocationChanged: tencent location error = " + error);
+		if (error == 0) {
+			Location l = new Location(LocationManager.NETWORK_PROVIDER);
+			l.setLatitude(location.getLatitude());
+			l.setLongitude(location.getLongitude());
+			l.setAltitude(location.getAltitude());
+			l.setAccuracy(location.getAccuracy());
+			l.setTime(location.getTime());
+			reportLocation(l); // 向系统汇报
+		}
+	}
+
+	@Override
+	public void onStatusUpdate(String name, int status, String desc) {
+		// ignore
+	}
+
 	private void handleEnable() {
 		// TODO 兼容 google 应用
-		Dbg.i(TAG, "handle enable");
+		Dbg.i(TAG, "handleEnable: start AlertActivity");
 
 		Intent intent = new Intent(mContext, AlertActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -226,7 +205,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	}
 
 	private void handleDisable() {
-		Dbg.i(TAG, "handle disable");
+		Dbg.i(TAG, "handleDisable");
 
 		userConfirm0(false);
 		// TODO
@@ -237,7 +216,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		synchronized (mLock) {
 			// important 调整定位周期
 			int i = mMinTimeSeconds;
-			Dbg.i(TAG, "set min time of tencent sdk to " + i + "s");
+			Dbg.i(TAG, "handleSetMinTime: set min time to " + i + "s");
 
 			if (i > 3600) {
 				mLocationManager.removeUpdates(this); // 周期太长的话, 直接取消定位
@@ -245,6 +224,29 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 				mLocationManager.requestLocationUpdates(
 						mLocationRequest.setInterval(i * 1000), this);
 			}
+		}
+	}
+
+	private void userConfirm0(boolean enabled) {
+		Settings.Secure.setLocationProviderEnabled(
+				mContext.getContentResolver(),
+				LocationManager.NETWORK_PROVIDER, enabled);
+		if (enabled) {
+			// setUserConfirmedPreference(true);
+			// TODO
+		}
+	}
+
+	private void updateStatusLocked(int newStatus) {
+		if (this.mStatus != newStatus) {
+			this.mStatus = newStatus;
+			this.mStatusUpdateTime = SystemClock.elapsedRealtime();
+		}
+	}
+
+	public static void userConfirm(boolean enabled) {
+		if (sInstance != null) {
+			sInstance.userConfirm0(enabled);
 		}
 	}
 
