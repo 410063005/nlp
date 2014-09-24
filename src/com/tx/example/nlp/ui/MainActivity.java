@@ -1,4 +1,4 @@
-package com.tx.example.nlp;
+package com.tx.example.nlp.ui;
 
 import android.app.ListActivity;
 import android.content.Intent;

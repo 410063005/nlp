@@ -1,4 +1,4 @@
-package com.tx.example.nlp;
+package com.tx.example.nlp.ui;
 
 import java.io.IOException;
 import java.util.List;

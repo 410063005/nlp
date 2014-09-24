@@ -46,7 +46,7 @@
 
         <!-- use for test only -->
         <activity
-            android:name="com.tx.example.nlp.MainActivity"
+            android:name="com.tx.example.nlp.ui.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,9 +54,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.tx.example.nlp.TestLocationActivity" />
-        <activity android:name="com.tx.example.nlp.TestGeocodeActivity" />
-        <activity android:name="com.tx.example.nlp.TestRgeocodeActivity" />
+        <activity android:name="com.tx.example.nlp.ui.TestLocationActivityity" />
+        <activity android:name="com.tx.example.nlp.ui.TestGeocodeActivity" />
+        <activity android:name="com.tx.example.nlp.ui.TestRgeocodeActivity" />
         <!-- use for test only -->
 
         <activity android:theme="@style/AppTheme.Transparent" android:name="com.tx.example.nlp.AlertActivity" 
