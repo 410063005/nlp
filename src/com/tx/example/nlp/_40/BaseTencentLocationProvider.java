@@ -6,9 +6,7 @@ import android.os.Bundle;
 import com.android.location.provider.LocationProvider;
 
 /**
- * 实现一些策略相关的回调方法，减少子类的复杂性
- *
- * @author kingcmchen
+ * 实现某些行为确定的回调方法，减少子类的复杂性
  *
  */
 public abstract class BaseTencentLocationProvider extends LocationProvider {
