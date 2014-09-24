@@ -15,8 +15,7 @@ public class TencentLocationService extends Service {
 	private static final String ACTION_GEOCODE_V2 = "com.google.android.location.v2.GeocodeProvider";
 	private static final String ACTION_LOCATION_V2 = "com.google.android.location.v2.NetworkLocationProvider";
 
-	private static final String TAG = TencentLocationService.class
-			.getSimpleName();
+	private static final String TAG = "TencentLocationService";
 
 	@Override
 	public synchronized IBinder onBind(Intent intent) {
@@ -24,18 +23,26 @@ public class TencentLocationService extends Service {
 			return null;
 		}
 		String action = intent.getAction();
-		Dbg.i(TAG, "on bind: " + action);
+		Dbg.i(TAG, "onBind: action=" + action);
+
 		if (ACTION_LOCATION.equals(action)) {
 			return new TencentLocationProvider(this).getBinder();
+
 		} else if (ACTION_GEOCODE.equals(action)) {
 			return new TencentGeocodeProvider(this).getBinder();
+
 		} else if (ACTION_LOCATION_V2.equals(action)) {
 			return new com.tx.example.nlp._42.TencentLocationProvider("", null).getBinder();
+
 		} else if (ACTION_GEOCODE_V2.equals(action)) {
 			return new com.tx.example.nlp._42.TencentGeocodeProvider().getBinder();
+
+		} else {
+			Dbg.e(TAG, "onBind: unknow action " + action);
 		}
 
 		return null;
 	}
 
 }
+;
