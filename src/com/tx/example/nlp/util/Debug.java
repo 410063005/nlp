@@ -1,4 +1,4 @@
-package com.tx.example.nlp;
+package com.tx.example.nlp.util;
 
 import android.util.Log;
 

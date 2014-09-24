@@ -21,7 +21,7 @@ import com.tencent.map.geolocation.TencentLocationListener;
 import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
 import com.tx.example.nlp.AlertActivity;
-import com.tx.example.nlp.Debug;
+import com.tx.example.nlp.util.Debug;
 
 public class TencentLocationProvider extends BaseTencentLocationProvider
 		implements TencentLocationListener {

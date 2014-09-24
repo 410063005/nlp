@@ -15,7 +15,7 @@ import com.tencent.tencentmap.mapsdk.search.PoiSearch;
 import com.tencent.tencentmap.mapsdk.search.ReGeocoderResult;
 import com.tencent.tencentmap.mapsdk.search.ReGeocoderResult.ReGeocoderAddress;
 import com.tx.example.nlp.BaseTencentGeocodeProvider;
-import com.tx.example.nlp.Debug;
+import com.tx.example.nlp.util.Debug;
 
 public class TencentGeocodeProvider extends BaseTencentGeocodeProvider {
 

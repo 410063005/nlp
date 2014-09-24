@@ -6,6 +6,7 @@ import android.os.IBinder;
 
 import com.tx.example.nlp._40.TencentGeocodeProvider;
 import com.tx.example.nlp._40.TencentLocationProvider;
+import com.tx.example.nlp.util.Debug;
 
 public class TencentLocationService extends Service {
 

@@ -6,7 +6,7 @@ import android.os.WorkSource;
 import com.android.location.provider.LocationProviderBase;
 import com.android.location.provider.ProviderPropertiesUnbundled;
 import com.android.location.provider.ProviderRequestUnbundled;
-import com.tx.example.nlp.Debug;
+import com.tx.example.nlp.util.Debug;
 
 public class TencentLocationProvider extends LocationProviderBase {
 	private static final String TAG = TencentLocationProvider.class.getSimpleName();
