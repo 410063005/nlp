@@ -215,7 +215,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	private void handleDisable() {
 		Debug.i(TAG, "handleDisable");
 
-		userConfirm0(false);
+		enableSystemNlp(false);
 		// TODO
 		updateStatusLocked(1);
 	}
@@ -235,7 +235,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		}
 	}
 
-	private void userConfirm0(boolean enabled) {
+	private void enableSystemNlp(boolean enabled) {
 		Settings.Secure.setLocationProviderEnabled(
 				mContext.getContentResolver(),
 				LocationManager.NETWORK_PROVIDER, enabled);
@@ -254,7 +254,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 
 	public static void userConfirm(boolean enabled) {
 		if (sInstance != null) {
-			sInstance.userConfirm0(enabled);
+			sInstance.enableSystemNlp(enabled);
 		}
 	}
 
