@@ -150,7 +150,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		Binder.clearCallingIdentity();
 		synchronized (mLock) {
 			mListenerIds.remove(arg0);
-			Debug.i(TAG, "onRemoveListener: " + arg1.toString());
+			Debug.i(TAG, "onRemoveListener: " + arg0 + ", " + arg1.toString());
 
 			if (mListenerIds.size() == 0) {
 				mLocationManager.removeUpdates(this); // 停止定位
@@ -170,7 +170,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 
 		synchronized (mLock) {
 			mListenerIds.add(arg0);
-			Debug.i(TAG, "onAddListener: " + arg1.toString());
+			Debug.i(TAG, "onAddListener: " + arg0 + ", " + arg1.toString());
 
 			if (mStatus == 2) {
 				mLocationManager.requestLocationUpdates(mLocationRequest, this);
