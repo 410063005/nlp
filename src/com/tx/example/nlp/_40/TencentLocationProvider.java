@@ -4,7 +4,6 @@ import java.util.HashSet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.NetworkInfo;
@@ -14,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.os.WorkSource;
-import android.provider.Settings;
 
 import com.tencent.map.geolocation.TencentLocation;
 import com.tencent.map.geolocation.TencentLocationListener;
@@ -186,7 +184,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		Binder.clearCallingIdentity();
 		synchronized (mLock) {
 			mNetworkState = state;
-			updateStatusLocked(state);
+			updateStatusLocked(mNetworkState);
 		}
 	}
 
@@ -271,12 +269,6 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		private static final int MSG_ID_DISABLE = 2;
 		private static final int MSG_ID_ENABLE = 1;
 		private static final int MSG_ID_SET_MIN_TIME = 3;
-
-		private static final int MSG_ID_ADD_LISTENER = 7;
-		private static final int MSG_ID_REMOVE_LISTENER = 4;
-		private static final int MSG_ID_ENABLE_LOCATION_TRACKING = 5;
-		private static final int MSG_ID_GET_INTERNAL_STATE = 6;
-		private static final int MSG_ID_UPDATE_LOCATION = 8;
 
 		private ProviderHandler() {
 		}
