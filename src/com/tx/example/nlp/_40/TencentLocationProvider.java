@@ -24,6 +24,7 @@ import com.tencent.map.geolocation.internal.TencentExtraKeys;
 import com.tx.example.nlp.AlertActivity;
 import com.tx.example.nlp.util.Debug;
 import com.tx.example.nlp.util.LegacyWrapper;
+import com.tx.example.nlp.util.Utils;
 
 public class TencentLocationProvider extends BaseTencentLocationProvider
 		implements TencentLocationListener {
@@ -198,12 +199,8 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		// tencent 定位sdk的结果
 		Debug.i(TAG, "onLocationChanged: tencent location error = " + error);
 		if (error == 0) {
-			Location l = new Location(LocationManager.NETWORK_PROVIDER);
-			l.setLatitude(location.getLatitude());
-			l.setLongitude(location.getLongitude());
-			l.setAltitude(location.getAltitude());
-			l.setAccuracy(location.getAccuracy());
-			l.setTime(location.getTime());
+			Location l = Utils.from(location);
+			l.setTime(System.currentTimeMillis());
 			reportLocation(l); // 向系统汇报
 		}
 	}
