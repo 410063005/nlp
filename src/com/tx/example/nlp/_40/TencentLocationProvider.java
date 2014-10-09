@@ -58,6 +58,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		sInstance = this; // trick
 	}
 
+	// =================== callback method from LocationProvider
 	@Override
 	public void onDisable() {
 		Debug.i(TAG, "onDisable", true);
@@ -145,7 +146,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		Binder.clearCallingIdentity();
 		synchronized (mLock) {
 			mListenerIds.remove(arg0);
-			Debug.i(TAG, "onRemoveListener");
+			Debug.i(TAG, "onRemoveListener: " + arg1.toString());
 
 			if (mListenerIds.size() == 0) {
 				mLocationManager.removeUpdates(this); // 停止定位
@@ -159,6 +160,8 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		Binder.clearCallingIdentity();
 		synchronized (mLock) {
 			mListenerIds.add(arg0);
+			Debug.i(TAG, "onAddListener: " + arg1.toString());
+
 			if (mStatus == 2) {
 				mLocationManager.requestLocationUpdates(mLocationRequest, this);
 			}
@@ -174,6 +177,9 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		}
 	}
 
+	// =================== callback method from LocationProvider
+
+	// =================== callback method from TencentLocationListener
 	@Override
 	public void onLocationChanged(TencentLocation location, int error,
 			String reason) {
@@ -194,6 +200,8 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	public void onStatusUpdate(String name, int status, String desc) {
 		// ignore
 	}
+
+	// =================== callback method from TencentLocationListener
 
 	private void handleEnable() {
 		// TODO 兼容 google 应用
