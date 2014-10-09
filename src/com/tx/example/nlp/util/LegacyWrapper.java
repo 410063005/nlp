@@ -1,6 +1,5 @@
-package com.tx.example.nlp;
+package com.tx.example.nlp.util;
 
-import com.tx.example.nlp.util.Debug;
 
 import android.content.Context;
 import android.location.LocationManager;
