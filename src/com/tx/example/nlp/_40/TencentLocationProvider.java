@@ -42,6 +42,8 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	private int mStatus = 2;
 	private long mStatusUpdateTime = 0L;
 
+	private boolean mSystemNlpEnabled;
+
 	public TencentLocationProvider(Context context) {
 		super();
 
@@ -55,6 +57,8 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 
 		// TODO 哪个坐标系??
 
+		mSystemNlpEnabled = Settings.Secure.isLocationProviderEnabled(
+				context.getContentResolver(), LocationManager.NETWORK_PROVIDER);
 		sInstance = this; // trick
 	}
 
@@ -158,6 +162,12 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	@Override
 	public void onAddListener(int arg0, WorkSource arg1) {
 		Binder.clearCallingIdentity();
+
+		if (!mSystemNlpEnabled) {
+			Debug.i(TAG, "onAddListener: ignore location request cause nlp disabled");
+			return;
+		}
+
 		synchronized (mLock) {
 			mListenerIds.add(arg0);
 			Debug.i(TAG, "onAddListener: " + arg1.toString());
@@ -204,12 +214,14 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	// =================== callback method from TencentLocationListener
 
 	private void handleEnable() {
-		// TODO 兼容 google 应用
-		Debug.i(TAG, "handleEnable: start AlertActivity");
+		if (!mSystemNlpEnabled) {
+			// TODO 兼容 google 应用
+			Debug.i(TAG, "handleEnable: start AlertActivity");
 
-		Intent intent = new Intent(mContext, AlertActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		mContext.startActivity(intent);
+			Intent intent = new Intent(mContext, AlertActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			mContext.startActivity(intent);
+		}
 	}
 
 	private void handleDisable() {
@@ -236,6 +248,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	}
 
 	private void enableSystemNlp(boolean enabled) {
+		mSystemNlpEnabled = enabled;
 		Settings.Secure.setLocationProviderEnabled(
 				mContext.getContentResolver(),
 				LocationManager.NETWORK_PROVIDER, enabled);
