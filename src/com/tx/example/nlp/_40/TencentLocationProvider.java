@@ -220,9 +220,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 			// TODO 兼容 google 应用
 			Debug.i(TAG, "handleEnable: start AlertActivity");
 
-			Intent intent = new Intent(mContext, AlertActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			mContext.startActivity(intent);
+			AlertActivity.start(mContext);
 		}
 	}
 
