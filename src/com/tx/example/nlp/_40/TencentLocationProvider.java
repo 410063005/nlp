@@ -20,6 +20,7 @@ import com.tencent.map.geolocation.TencentLocation;
 import com.tencent.map.geolocation.TencentLocationListener;
 import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
+import com.tencent.map.geolocation.internal.TencentExtraKeys;
 import com.tx.example.nlp.AlertActivity;
 import com.tx.example.nlp.util.Debug;
 
@@ -53,6 +54,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		mLocationManager = TencentLocationManager.getInstance(context);
 		mLocationRequest = TencentLocationRequest.create().setRequestLevel(
 				TencentLocationRequest.REQUEST_LEVEL_GEO);
+		TencentExtraKeys.setAllowGps(mLocationRequest, false);
 		mListenerIds = new HashSet<Integer>();
 
 		// TODO 哪个坐标系??
