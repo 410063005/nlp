@@ -22,6 +22,7 @@ import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
 import com.tencent.map.geolocation.internal.TencentExtraKeys;
 import com.tx.example.nlp.AlertActivity;
+import com.tx.example.nlp.LegacyWrapper;
 import com.tx.example.nlp.util.Debug;
 
 public class TencentLocationProvider extends BaseTencentLocationProvider
@@ -59,8 +60,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 
 		// TODO 哪个坐标系??
 
-		mSystemNlpEnabled = Settings.Secure.isLocationProviderEnabled(
-				context.getContentResolver(), LocationManager.NETWORK_PROVIDER);
+		mSystemNlpEnabled = LegacyWrapper.isNetworkLocationProviderEnabled(context);
 		sInstance = this; // trick
 	}
 
@@ -249,9 +249,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 
 	private void enableSystemNlp(boolean enabled) {
 		mSystemNlpEnabled = enabled;
-		Settings.Secure.setLocationProviderEnabled(
-				mContext.getContentResolver(),
-				LocationManager.NETWORK_PROVIDER, enabled);
+		LegacyWrapper.setNetworkLocationProviderEnabled(mContext, enabled);
 		if (enabled) {
 			// setUserConfirmedPreference(true);
 			// TODO
