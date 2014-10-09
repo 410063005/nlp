@@ -6,13 +6,14 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.view.Menu;
 
 import com.google.android.location.R;
 import com.tx.example.nlp._40.TencentLocationProvider;
+import com.tx.example.nlp.util.Debug;
 
 public class AlertActivity extends Activity implements OnClickListener {
 
+	private static final String TAG = "AlertActivity";
 	private boolean mAgreed = false;
 
 	@Override
@@ -39,14 +40,8 @@ public class AlertActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		Debug.i(TAG, "onPause: agree enable? " + mAgreed);
 		TencentLocationProvider.userConfirm(mAgreed);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
 	}
 
 	@Override
