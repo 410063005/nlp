@@ -84,11 +84,16 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	@Override
 	public void onEnableLocationTracking(boolean enabled) {
 		Binder.clearCallingIdentity();
+
+		if (!mSystemNlpEnabled) {
+			return;
+		}
+
 		if (enabled) {
 
 			// TODO important 调整定位周期
-			Debug.i(TAG, "onEnableLocationTracking: set sdk interval to " + mMinTimeSeconds + " s");
-			mLocationRequest.setInterval(mMinTimeSeconds * 1000);
+			Debug.i(TAG, "onEnableLocationTracking: start location");
+			mLocationManager.requestLocationUpdates(mLocationRequest, this, mHandler.getLooper());
 		} else {
 			Debug.i(TAG, "onEnableLocationTracking: stop location and schedule pendingintent");
 			mLocationManager.removeUpdates(this);
@@ -158,10 +163,10 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	public void onRemoveListener(int arg0, WorkSource arg1) {
 		Binder.clearCallingIdentity();
 		synchronized (mLock) {
-			mListenerIds.remove(arg0);
+			final boolean notEmpty = mListenerIds.remove(arg0);
 			Debug.i(TAG, "onRemoveListener: " + arg0 + ", " + arg1.toString());
 
-			if (mListenerIds.size() == 0) {
+			if (notEmpty && mListenerIds.isEmpty()) {
 				mLocationManager.removeUpdates(this); // 停止定位
 				Debug.i(TAG, "onRemoveListener: stop location");
 			}
@@ -237,17 +242,17 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	}
 
 	private void handleSetMinTime() {
-		Debug.i(TAG, "handleSetMinTime: minTime is " + mMinTimeSeconds + " s");
 
 		// synchronized (mLock) {
 			// important 调整定位周期
-			int i = mMinTimeSeconds;
+			final int i = mMinTimeSeconds;
 
 			if (i > 3600) {
+				Debug.i(TAG, "handleSetMinTime: stop location");
 				mLocationManager.removeUpdates(this); // 周期太长的话, 直接取消定位
 			} else {
-				mLocationManager.requestLocationUpdates(
-						mLocationRequest.setInterval(i * 1000), this);
+				Debug.i(TAG, "handleSetMinTime: set sdk interval to " + mMinTimeSeconds + " s");
+				mLocationRequest.setInterval(i * 1000); // 否则, 仅更新定位周期
 			}
 		// }
 	}
