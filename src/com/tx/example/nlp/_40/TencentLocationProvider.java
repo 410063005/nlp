@@ -126,6 +126,9 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	@Override
 	public void onSetMinTime(long minTime, WorkSource arg1) {
 		Binder.clearCallingIdentity();
+
+		Debug.i(TAG, "onSetMinTime: minTime is " + minTime + " ms");
+
 		long l = minTime / 1000L;
 		int i = (int) l;
 		if (l != i) {
@@ -234,10 +237,11 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	}
 
 	private void handleSetMinTime() {
-		synchronized (mLock) {
+		Debug.i(TAG, "handleSetMinTime: minTime is " + mMinTimeSeconds + " s");
+
+		// synchronized (mLock) {
 			// important 调整定位周期
 			int i = mMinTimeSeconds;
-			Debug.i(TAG, "handleSetMinTime: set min time to " + i + "s");
 
 			if (i > 3600) {
 				mLocationManager.removeUpdates(this); // 周期太长的话, 直接取消定位
@@ -245,7 +249,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 				mLocationManager.requestLocationUpdates(
 						mLocationRequest.setInterval(i * 1000), this);
 			}
-		}
+		// }
 	}
 
 	private void enableSystemNlp(boolean enabled) {
