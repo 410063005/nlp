@@ -87,9 +87,14 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		if (enabled) {
 
 			// TODO important 调整定位周期
-
+			Debug.i(TAG, "onEnableLocationTracking: set sdk interval to " + mMinTimeSeconds + " s");
+			mLocationRequest.setInterval(mMinTimeSeconds * 1000);
+		} else {
+			Debug.i(TAG, "onEnableLocationTracking: stop location and schedule pendingintent");
+			mLocationManager.removeUpdates(this);
+			// TODO 停止, 但定时发起定位 , 周期为 1 天
 			synchronized (mLock) {
-				updateStatusLocked(2);
+				updateStatusLocked(1);
 			}
 		}
 	}
@@ -199,6 +204,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		if (error == 0) {
 			Location l = Utils.from(location);
 			l.setTime(System.currentTimeMillis());
+			updateStatusLocked(2);
 			reportLocation(l); // 向系统汇报
 		}
 	}
