@@ -140,7 +140,8 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 			throw new RuntimeException("onSetMinTime: minTime is too big " + l);
 		}
 		synchronized (this.mLock) {
-			this.mMinTimeSeconds = Math.max(i, 20);
+			// TODO 是否有必要调整
+			this.mMinTimeSeconds = Math.max(i, 3);
 			Message.obtain(this.mHandler, ProviderHandler.MSG_ID_SET_MIN_TIME)
 					.sendToTarget();
 		}
