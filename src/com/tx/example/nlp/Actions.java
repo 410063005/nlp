@@ -16,6 +16,10 @@ public class Actions {
 	public static class V {
 		public static final String GEOCODE = "com.google.android.location.GeocodeProvider";
 		public static final String LOCATION = "com.google.android.location.NetworkLocationProvider";
+
+		public static final String GEOCODE2 = "com.android.location.service.GeocodeProvider";
+		public static final String LOCATION2 = "com.android.location.service.NetworkLocationProvider";
+
 	}
 
 	/**
