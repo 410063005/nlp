@@ -1,8 +1,8 @@
-package com.tx.example.nlp;
+package com.tx.example.nlp.util;
 
 import android.util.Log;
 
-public class Dbg {
+public class Debug {
 
 	public static void i(String tag, String msg) {
 		Log.i(tag, msg);
@@ -14,5 +14,9 @@ public class Dbg {
 		} else {
 			Log.i(tag, msg);
 		}
+	}
+
+	public static void e(String tag, String msg) {
+		Log.e(tag, msg);
 	}
 }
