@@ -53,7 +53,8 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 		mHandler = new ProviderHandler();
 		mLocationManager = TencentLocationManager.getInstance(context);
 		mLocationRequest = TencentLocationRequest.create().setRequestLevel(
-				TencentLocationRequest.REQUEST_LEVEL_GEO);
+				TencentLocationRequest.REQUEST_LEVEL_GEO)
+				.setInterval(3000);
 		TencentExtraKeys.setAllowGps(mLocationRequest, false);
 		mListenerIds = new HashSet<Integer>();
 
@@ -188,7 +189,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 			Debug.i(TAG, "onAddListener: " + arg0 + ", " + arg1.toString());
 
 			if (mStatus == 2) {
-				mLocationManager.requestLocationUpdates(mLocationRequest, this);
+				mLocationManager.requestLocationUpdates(mLocationRequest, this, mHandler.getLooper());
 			}
 		}
 	}
