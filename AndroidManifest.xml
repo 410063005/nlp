@@ -56,6 +56,7 @@
             <intent-filter>
                 <action android:name="com.android.location.service.NetworkLocationProvider" />
                 <action android:name="com.android.location.service.GeocodeProvider" />
+                <action android:name="com.android.location.service.v2.NetworkLocationProvider" />
             </intent-filter>
             <meta-data android:name="version" android:value="1" />
         </service>
