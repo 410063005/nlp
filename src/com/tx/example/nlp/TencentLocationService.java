@@ -27,10 +27,12 @@ public class TencentLocationService extends Service {
 				|| Actions.V.GEOCODE2.equals(action)) {
 			return new TencentGeocodeProvider(this).getBinder();
 
-		} else if (Actions.V2.LOCATION.equals(action)) {
+		} else if (Actions.V2.LOCATION.equals(action)
+				|| Actions.V2.LOCATION2.equals(action)) {
 			return new com.tx.example.nlp._42.TencentLocationProvider(this).getBinder();
 
-		} else if (Actions.V2.GEOCODE.equals(action)) {
+		} else if (Actions.V2.GEOCODE.equals(action)
+				|| Actions.V2.GEOCODE2.equals(action)) {
 			return new com.tx.example.nlp._42.TencentGeocodeProvider().getBinder();
 
 		} else {
@@ -41,4 +43,3 @@ public class TencentLocationService extends Service {
 	}
 
 }
-;

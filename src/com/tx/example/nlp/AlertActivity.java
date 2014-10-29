@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.location.R;
@@ -49,7 +50,12 @@ public class AlertActivity extends Activity implements OnClickListener {
 	protected void onPause() {
 		super.onPause();
 		Debug.i(TAG, "onPause: agree enable? " + mAgreed);
-		TencentLocationProvider.userConfirm(mAgreed);
+		// TODO trick
+		if (Build.VERSION.SDK_INT >= 17) { // 4.2 及以上, 17
+			com.tx.example.nlp._42.TencentLocationProvider.userConfirm(mAgreed);
+		} else { // 4.0 及以下
+			TencentLocationProvider.userConfirm(mAgreed);
+		}
 	}
 
 	@Override
