@@ -60,6 +60,7 @@ public class TencentLocationProvider extends LocationProviderBase implements Ten
 
 		mSystemNlpEnabled = LegacyWrapper.isNetworkLocationProviderEnabled(context);
 		sInstance = this; // trick
+		Debug.i(TAG, "location provider 4.2 created");
 	}
 
 	@Override
