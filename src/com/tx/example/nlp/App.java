@@ -3,7 +3,7 @@ package com.tx.example.nlp;
 import android.app.Application;
 import android.util.Log;
 
-import com.baidu.map.location.BuildConfig;
+import com.google.android.location.BuildConfig;
 import com.tencent.map.geolocation.internal.TencentExtraKeys;
 import com.tencent.map.geolocation.internal.TencentLog;
 
