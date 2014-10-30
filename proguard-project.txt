@@ -18,3 +18,23 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-libraryjars build_libs\location4.0.jar
+-libraryjars build_libs\location4.2.jar
+
+-dontwarn org.eclipse.jdt.annotation.**
+-dontwarn com.android.location.provider.**
+-dontwarn android.location.GeocoderParams
+
+-dontwarn com.android.location.**
+-dontwarn com.android.internal.location.**
+
+# Preserve the required interface from the License Verification Library
+# (but don't nag the developer if the library is not used at all).
+
+-keep public interface com.android.vending.licensing.ILicensingService
+
+-dontnote com.android.vending.licensing.ILicensingService
+
+-dontskipnonpubliclibraryclassmembers
+-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,LocalVariable*Table,*Annotation*,Synthetic,EnclosingMethod
