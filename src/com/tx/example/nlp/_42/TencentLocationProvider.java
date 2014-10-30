@@ -152,7 +152,7 @@ public class TencentLocationProvider extends LocationProviderBase implements Ten
 
 	private void handleSetRequest(ProviderRequestUnbundled req, WorkSource ws) {
 		Debug.i(TAG, "handleSetRequest: interval=" + req.getInterval());
-		mMinTimeSeconds = (int) (req.getInterval() / 1000);
+		mMinTimeSeconds = Math.max((int) (req.getInterval() / 1000), 1);
 		handleSetMinTime();
 		_onEnableLocationTracking(req.getInterval() < 3600 * 1000);
 	}
