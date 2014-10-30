@@ -9,6 +9,11 @@ import com.tencent.map.geolocation.internal.TencentLog;
 
 public class App extends Application implements TencentLog {
 
+	/**
+	 * 配置项, 控制是否弹出 AlertActivity
+	 */
+	public static final boolean CONFIG_DONT_SHOW_ALERT = true;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();

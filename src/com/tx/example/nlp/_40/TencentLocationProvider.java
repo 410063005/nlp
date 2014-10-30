@@ -62,6 +62,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 
 		mSystemNlpEnabled = LegacyWrapper.isNetworkLocationProviderEnabled(context);
 		sInstance = this; // trick
+		Debug.i(TAG, "locaton provider 4.0 created");
 	}
 
 	// =================== callback method from LocationProvider

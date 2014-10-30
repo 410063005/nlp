@@ -21,6 +21,7 @@ import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
 import com.tencent.map.geolocation.internal.TencentExtraKeys;
 import com.tx.example.nlp.AlertActivity;
+import com.tx.example.nlp.App;
 import com.tx.example.nlp.util.Debug;
 import com.tx.example.nlp.util.LegacyWrapper;
 import com.tx.example.nlp.util.Utils;
@@ -60,6 +61,7 @@ public class TencentLocationProvider extends LocationProviderBase implements Ten
 
 		mSystemNlpEnabled = LegacyWrapper.isNetworkLocationProviderEnabled(context);
 		sInstance = this; // trick
+		Debug.i(TAG, "location provider 4.2 created");
 	}
 
 	@Override
@@ -160,10 +162,14 @@ public class TencentLocationProvider extends LocationProviderBase implements Ten
 
 	private void handleEnable() {
 		if (!mSystemNlpEnabled) {
-			// TODO 兼容 google 应用
-			Debug.i(TAG, "handleEnable: start AlertActivity");
+			if (App.CONFIG_DONT_SHOW_ALERT) {
+				userConfirm(true);
+			} else {
+				// TODO 兼容 google 应用
+				Debug.i(TAG, "handleEnable: start AlertActivity");
 
-			AlertActivity.start(mContext);
+				AlertActivity.start(mContext);
+			}
 		}
 	}
 
