@@ -26,12 +26,12 @@ public class Actions {
 	 * Android 4.2 上通常使用的 action
 	 */
 	public static class V2 {
-		public static final String GEOCODE = "com.google.android.location.v2.GeocodeProvider";
-		public static final String LOCATION = "com.google.android.location.v2.NetworkLocationProvider";
-
-		public static final String GEOCODE2 = "com.android.location.service.v2.GeocodeProvider";
-		public static final String LOCATION2 = "com.android.location.service.v2.NetworkLocationProvider";
+		public static final String LOCATION = "com.android.location.service.v2.NetworkLocationProvider";
 	}
 
 	// TODO 其他的 action, 如小米系统
+
+	public static class V3 {
+		public static final String LOCATION = "com.android.location.service.v3.NetworkLocationProvider";
+	}
 }

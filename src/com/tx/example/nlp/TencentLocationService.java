@@ -28,11 +28,10 @@ public class TencentLocationService extends Service {
 			return new TencentGeocodeProvider(this).getBinder();
 
 		} else if (Actions.V2.LOCATION.equals(action)
-				|| Actions.V2.LOCATION2.equals(action)) {
+				|| Actions.V3.LOCATION.equals(action)) {
 			return new com.tx.example.nlp._42.TencentLocationProvider(this).getBinder();
 
-		} else if (Actions.V2.GEOCODE.equals(action)
-				|| Actions.V2.GEOCODE2.equals(action)) {
+		} else if (Actions.V.GEOCODE.equals(action)) {
 			return new com.tx.example.nlp._42.TencentGeocodeProvider().getBinder();
 
 		} else {
