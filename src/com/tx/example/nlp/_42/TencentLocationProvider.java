@@ -41,7 +41,7 @@ public class TencentLocationProvider extends LocationProviderBase implements Ten
 	private final TencentLocationRequest mLocationRequest;
 
 	private final Object mLock = new Object();
-	private int mMinTimeSeconds = 2147483647;
+	private int mMinTimeSeconds = 24 * 3600;//2147483647;
 	private int mStatus = 2;
 	private long mStatusUpdateTime = 0L;
 

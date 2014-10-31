@@ -39,7 +39,7 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 
 	private final Object mLock = new Object();
 	// private boolean mStarted;
-	private int mMinTimeSeconds = 2147483647;
+	private int mMinTimeSeconds = 24 * 3600;//2147483647;
 	private int mNetworkState;
 	private int mStatus = 2;
 	private long mStatusUpdateTime = 0L;
