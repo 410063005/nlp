@@ -163,11 +163,11 @@ public class TencentLocationProvider extends LocationProviderBase implements Ten
 	private void handleEnable() {
 		if (!mSystemNlpEnabled) {
 			if (App.CONFIG_DONT_SHOW_ALERT) {
+				Debug.i(TAG, "handleEnable: skip AlertActivity");
 				userConfirm(true);
 			} else {
 				// TODO 兼容 google 应用
 				Debug.i(TAG, "handleEnable: start AlertActivity");
-
 				AlertActivity.start(mContext);
 			}
 		}
