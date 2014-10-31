@@ -76,7 +76,7 @@ public class TencentLocationProvider extends LocationProviderBase implements Ten
 	public void onEnable() {
 		Debug.i(TAG, "onEnable", true);
 
-		Binder.clearCallingIdentity();
+//		Binder.clearCallingIdentity();
 		// maybe called from a non-main thread
 		mHandler.obtainMessage(ProviderHandler.MSG_ID_ENABLE).sendToTarget();
 	}
@@ -101,6 +101,13 @@ public class TencentLocationProvider extends LocationProviderBase implements Ten
 
 	@Override
 	public void onSetRequest(ProviderRequestUnbundled req, WorkSource ws) {
+		Binder.clearCallingIdentity();
+
+		if (!mSystemNlpEnabled) {
+			Debug.i(TAG, "onSetRequest: ignore location request cause nlp disabled");
+			return;
+		}
+
 		mHandler.obtainMessage(
 				ProviderHandler.MSG_ID_SET_REQUEST,
 				Pair.create(req, ws))
