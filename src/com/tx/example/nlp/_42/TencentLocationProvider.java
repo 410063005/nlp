@@ -250,7 +250,7 @@ public class TencentLocationProvider extends LocationProviderBase implements Ten
 				handleSetRequest(obj.first, obj.second);
 				break;
 			default:
-				handleSetMinTime();
+//				handleSetMinTime();
 				break;
 			}
 		}
