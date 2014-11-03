@@ -1,4 +1,4 @@
-package com.tx.example.nlp._40;
+package com.tx.example.nlp;
 
 import java.util.List;
 import java.util.Locale;
