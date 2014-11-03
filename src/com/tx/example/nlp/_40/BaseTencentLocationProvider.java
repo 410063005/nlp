@@ -4,9 +4,12 @@ import android.location.Criteria;
 import android.os.Bundle;
 
 import com.android.location.provider.LocationProvider;
+import com.tx.example.nlp._42.TencentLocationProvider;
 
 /**
- * 实现某些行为确定的回调方法，减少子类的复杂性
+ * 实现某些行为确定的回调方法，减少子类的复杂性.
+ * <p>
+ * 应跟 {@link TencentLocationProvider#PROPERTIES} 保持一致.
  *
  */
 public abstract class BaseTencentLocationProvider extends LocationProvider {

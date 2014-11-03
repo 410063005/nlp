@@ -22,6 +22,7 @@ import com.tencent.map.geolocation.TencentLocationRequest;
 import com.tencent.map.geolocation.internal.TencentExtraKeys;
 import com.tx.example.nlp.AlertActivity;
 import com.tx.example.nlp.App;
+import com.tx.example.nlp._40.BaseTencentLocationProvider;
 import com.tx.example.nlp.util.Debug;
 import com.tx.example.nlp.util.LegacyWrapper;
 import com.tx.example.nlp.util.Utils;
@@ -29,9 +30,20 @@ import com.tx.example.nlp.util.Utils;
 public class TencentLocationProvider extends LocationProviderBase implements TencentLocationListener {
 	private static final String TAG = "TencentLocationProvider_42";
 
+	/**
+	 * provider 参数, 应跟 {@link BaseTencentLocationProvider} 回调方法保持一致.
+	 */
 	private static ProviderPropertiesUnbundled PROPERTIES = ProviderPropertiesUnbundled
-			.create(true, false, true, false, false, false, false,
-					Criteria.POWER_LOW, Criteria.ACCURACY_HIGH);
+			.create(true, // requiresNetwork
+					false, // requiresSatellite
+					true, // requiresCell
+					false, // hasMonetaryCost
+					false, // supportsAltitude
+					false, // supportsSpeed
+					false, // supportsBearing
+					Criteria.POWER_LOW, // powerRequirement
+					Criteria.ACCURACY_HIGH // accuracy
+			);
 
 	private static TencentLocationProvider sInstance;
 
