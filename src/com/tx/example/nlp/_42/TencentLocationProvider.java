@@ -42,7 +42,7 @@ public class TencentLocationProvider extends LocationProviderBase implements Ten
 					false, // supportsSpeed
 					false, // supportsBearing
 					Criteria.POWER_LOW, // powerRequirement
-					Criteria.ACCURACY_HIGH // accuracy
+					Criteria.ACCURACY_FINE // accuracy
 			);
 
 	private static TencentLocationProvider sInstance;
