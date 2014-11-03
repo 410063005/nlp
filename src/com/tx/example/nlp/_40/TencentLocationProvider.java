@@ -27,7 +27,7 @@ import com.tx.example.nlp.util.Utils;
 
 public class TencentLocationProvider extends BaseTencentLocationProvider
 		implements TencentLocationListener {
-	private static final String TAG = "TencentLocationProvider";
+	private static final String TAG = "TencentLocationProvider_40";
 
 	private static TencentLocationProvider sInstance;
 

@@ -27,7 +27,7 @@ import com.tx.example.nlp.util.LegacyWrapper;
 import com.tx.example.nlp.util.Utils;
 
 public class TencentLocationProvider extends LocationProviderBase implements TencentLocationListener {
-	private static final String TAG = TencentLocationProvider.class.getSimpleName();
+	private static final String TAG = "TencentLocationProvider_42";
 
 	private static ProviderPropertiesUnbundled PROPERTIES = ProviderPropertiesUnbundled
 			.create(true, false, true, false, false, false, false,
