@@ -9,7 +9,7 @@ import com.android.location.provider.LocationProviderBase;
 import com.android.location.provider.ProviderPropertiesUnbundled;
 import com.android.location.provider.ProviderRequestUnbundled;
 import com.tx.example.nlp.LocationReporter;
-import com.tx.example.nlp.TencentLocationProviderProxy;
+import com.tx.example.nlp.TencentLocationProviderImpl;
 import com.tx.example.nlp._40.BaseTencentLocationProvider;
 import com.tx.example.nlp.util.Debug;
 
@@ -33,11 +33,11 @@ public class TencentLocationProvider extends LocationProviderBase implements
 			);
 
 	private static TencentLocationProvider sInstance;
-	private TencentLocationProviderProxy mProxy;
+	private TencentLocationProviderImpl mProxy;
 
 	public TencentLocationProvider(Context context) {
 		super("NetworkLocationProvider", PROPERTIES);
-		mProxy = new TencentLocationProviderProxy(context, this);
+		mProxy = new TencentLocationProviderImpl(context, this);
 		sInstance = this; // trick
 		Debug.i(TAG, "location provider 4.2 created");
 	}

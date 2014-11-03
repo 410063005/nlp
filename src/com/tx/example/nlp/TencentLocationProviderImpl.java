@@ -24,10 +24,10 @@ import com.tx.example.nlp.util.Debug;
 import com.tx.example.nlp.util.LegacyWrapper;
 import com.tx.example.nlp.util.Utils;
 
-public class TencentLocationProviderProxy implements TencentLocationListener {
+public class TencentLocationProviderImpl implements TencentLocationListener {
 	private static final String TAG = "TencentLocationProviderProxy";
 
-	private static TencentLocationProviderProxy sInstance;
+	private static TencentLocationProviderImpl sInstance;
 
 	private final LocationReporter mLocationReporter;
 
@@ -46,7 +46,7 @@ public class TencentLocationProviderProxy implements TencentLocationListener {
 
 	private boolean mSystemNlpEnabled;
 
-	public TencentLocationProviderProxy(Context context, LocationReporter reporter) {
+	public TencentLocationProviderImpl(Context context, LocationReporter reporter) {
 		super();
 
 		// init final fields

@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.WorkSource;
 
 import com.tx.example.nlp.LocationReporter;
-import com.tx.example.nlp.TencentLocationProviderProxy;
+import com.tx.example.nlp.TencentLocationProviderImpl;
 import com.tx.example.nlp.util.Debug;
 
 public class TencentLocationProvider extends BaseTencentLocationProvider implements LocationReporter {
@@ -15,11 +15,11 @@ public class TencentLocationProvider extends BaseTencentLocationProvider impleme
 
 	private static TencentLocationProvider sInstance;
 
-	private final TencentLocationProviderProxy mProxy;
+	private final TencentLocationProviderImpl mProxy;
 
 	public TencentLocationProvider(Context context) {
 		super();
-		mProxy = new TencentLocationProviderProxy(context, this);
+		mProxy = new TencentLocationProviderImpl(context, this);
 		sInstance = this; // trick
 		Debug.i(TAG, "locaton provider 4.0 created");
 	}
