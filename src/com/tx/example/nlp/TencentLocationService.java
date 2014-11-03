@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import com.tx.example.nlp._40.TencentGeocodeProvider;
 import com.tx.example.nlp._40.TencentLocationProvider;
 import com.tx.example.nlp.util.Debug;
 
@@ -32,7 +31,7 @@ public class TencentLocationService extends Service {
 			return new com.tx.example.nlp._42.TencentLocationProvider(this).getBinder();
 
 		} else if (Actions.V.GEOCODE.equals(action)) {
-			return new com.tx.example.nlp._42.TencentGeocodeProvider().getBinder();
+			return new TencentGeocodeProvider(this).getBinder();
 
 		} else {
 			Debug.e(TAG, "onBind: unknow action " + action);

@@ -1,67 +1,25 @@
 package com.tx.example.nlp._40;
 
-import java.util.HashSet;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.NetworkInfo;
-import android.os.Binder;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.SystemClock;
 import android.os.WorkSource;
 
-import com.tencent.map.geolocation.TencentLocation;
-import com.tencent.map.geolocation.TencentLocationListener;
-import com.tencent.map.geolocation.TencentLocationManager;
-import com.tencent.map.geolocation.TencentLocationRequest;
-import com.tencent.map.geolocation.internal.TencentExtraKeys;
-import com.tx.example.nlp.AlertActivity;
-import com.tx.example.nlp.App;
+import com.tx.example.nlp.LocationReporter;
+import com.tx.example.nlp.TencentLocationProviderImpl;
 import com.tx.example.nlp.util.Debug;
-import com.tx.example.nlp.util.LegacyWrapper;
-import com.tx.example.nlp.util.Utils;
 
-public class TencentLocationProvider extends BaseTencentLocationProvider
-		implements TencentLocationListener {
-	private static final String TAG = "TencentLocationProvider";
+public class TencentLocationProvider extends BaseTencentLocationProvider implements LocationReporter {
+	private static final String TAG = "TencentLocationProvider_40";
 
 	private static TencentLocationProvider sInstance;
 
-	private final Context mContext;
-	private final ProviderHandler mHandler;
-	private final TencentLocationManager mLocationManager;
-	private final TencentLocationRequest mLocationRequest;
-	private final HashSet<Integer> mListenerIds;
-
-	private final Object mLock = new Object();
-	// private boolean mStarted;
-	private int mMinTimeSeconds = 24 * 3600;//2147483647;
-	private int mNetworkState;
-	private int mStatus = 2;
-	private long mStatusUpdateTime = 0L;
-
-	private boolean mSystemNlpEnabled;
+	private final TencentLocationProviderImpl mProxy;
 
 	public TencentLocationProvider(Context context) {
 		super();
-
-		// init final fields
-		mContext = context;
-		mHandler = new ProviderHandler();
-		mLocationManager = TencentLocationManager.getInstance(context);
-		mLocationRequest = TencentLocationRequest.create().setRequestLevel(
-				TencentLocationRequest.REQUEST_LEVEL_GEO)
-				.setInterval(3000);
-		TencentExtraKeys.setAllowGps(mLocationRequest, false);
-		mListenerIds = new HashSet<Integer>();
-
-		// TODO 哪个坐标系??
-
-		mSystemNlpEnabled = LegacyWrapper.isNetworkLocationProviderEnabled(context);
+		mProxy = new TencentLocationProviderImpl(context, this);
 		sInstance = this; // trick
 		Debug.i(TAG, "locaton provider 4.0 created");
 	}
@@ -69,215 +27,62 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 	// =================== callback method from LocationProvider
 	@Override
 	public void onDisable() {
-		Debug.i(TAG, "onDisable", true);
-
-		Binder.clearCallingIdentity();
-		mHandler.obtainMessage(ProviderHandler.MSG_ID_DISABLE).sendToTarget();
+		mProxy.onDisable();
 	}
 
 	@Override
 	public void onEnable() {
-		Debug.i(TAG, "onEnable", true);
-
-		Binder.clearCallingIdentity();
-		// maybe called from a non-main thread
-		mHandler.obtainMessage(ProviderHandler.MSG_ID_ENABLE).sendToTarget();
+		mProxy.onEnable();
 	}
 
 	@Override
 	public void onEnableLocationTracking(boolean enabled) {
-		Binder.clearCallingIdentity();
-
-		if (!mSystemNlpEnabled) {
-			return;
-		}
-
-		if (enabled) {
-
-			// TODO important 调整定位周期
-			Debug.i(TAG, "onEnableLocationTracking: start location");
-			mLocationManager.requestLocationUpdates(mLocationRequest, this, mHandler.getLooper());
-		} else {
-			Debug.i(TAG, "onEnableLocationTracking: stop location and schedule pendingintent");
-			mLocationManager.removeUpdates(this);
-			// TODO 停止, 但定时发起定位 , 周期为 1 天
-			synchronized (mLock) {
-				updateStatusLocked(1);
-			}
-		}
+		mProxy.onEnableLocationTracking(enabled);
 	}
 
 	@Override
 	public String onGetInternalState() {
-		// TODO Auto-generated method stub
-		return null;
+		return mProxy.onGetInternalState();
 	}
 
 	@Override
 	public int onGetStatus(Bundle arg0) {
-		Binder.clearCallingIdentity();
-
-		synchronized (mLock) {
-			return mStatus;
-		}
+		return mProxy.onGetStatus(arg0);
 	}
 
 	@Override
 	public long onGetStatusUpdateTime() {
-		Binder.clearCallingIdentity();
-
-		synchronized (mLock) {
-			return mStatusUpdateTime;
-		}
+		return mProxy.onGetStatusUpdateTime();
 	}
 
 	@Override
 	public void onSetMinTime(long minTime, WorkSource arg1) {
-		Binder.clearCallingIdentity();
-
-		Debug.i(TAG, "onSetMinTime: minTime is " + minTime + " ms");
-
-		long l = minTime / 1000L;
-		int i = (int) l;
-		if (l != i) {
-			throw new RuntimeException("onSetMinTime: minTime is too big " + l);
-		}
-		synchronized (this.mLock) {
-			this.mMinTimeSeconds = Math.max(i, 1);
-			Message.obtain(this.mHandler, ProviderHandler.MSG_ID_SET_MIN_TIME)
-					.sendToTarget();
-		}
-
+		mProxy.onSetMinTime(minTime, arg1);
 	}
 
 	@Override
 	public void onUpdateLocation(Location location) {
-		if (location == null) {
-			return;
-		}
-		if (LocationManager.GPS_PROVIDER.equals(location.getProvider())) {
-			// TODO 系统可能将gps等其他模块的定位结果通过这个接口传入进来
-			// TODO
-		}
+		mProxy.onUpdateLocation(location);
 	}
 
 	// FIXME 如果我们的sdk足够灵活, 比如能支持"长时间暂停", 完全可以不必实现这两个方法
 	@Override
 	public void onRemoveListener(int arg0, WorkSource arg1) {
-		Binder.clearCallingIdentity();
-		synchronized (mLock) {
-			final boolean notEmpty = mListenerIds.remove(arg0);
-			Debug.i(TAG, "onRemoveListener: " + arg0 + ", " + arg1.toString());
-
-			if (notEmpty && mListenerIds.isEmpty()) {
-				mLocationManager.removeUpdates(this); // 停止定位
-				Debug.i(TAG, "onRemoveListener: stop location");
-			}
-		}
+		mProxy.onRemoveListener(arg0, arg1);
 	}
 
 	@Override
 	public void onAddListener(int arg0, WorkSource arg1) {
-		Binder.clearCallingIdentity();
-
-		if (!mSystemNlpEnabled) {
-			Debug.i(TAG, "onAddListener: ignore location request cause nlp disabled");
-			return;
-		}
-
-		synchronized (mLock) {
-			mListenerIds.add(arg0);
-			Debug.i(TAG, "onAddListener: " + arg0 + ", " + arg1.toString());
-
-			if (mStatus == 2) {
-				mLocationManager.requestLocationUpdates(mLocationRequest, this, mHandler.getLooper());
-			}
-		}
+		mProxy.onAddListener(arg0, arg1);
 	}
 
 	@Override
 	public void onUpdateNetworkState(int state, NetworkInfo info) {
-		Binder.clearCallingIdentity();
-		synchronized (mLock) {
-			mNetworkState = state;
-			updateStatusLocked(mNetworkState);
-		}
-	}
-
-	// =================== callback method from LocationProvider
-
-	// =================== callback method from TencentLocationListener
-	@Override
-	public void onLocationChanged(TencentLocation location, int error,
-			String reason) {
-		// tencent 定位sdk的结果
-		Debug.i(TAG, "onLocationChanged: tencent location error = " + error);
-		if (error == 0) {
-			Location l = Utils.from(location);
-			l.setTime(System.currentTimeMillis());
-			updateStatusLocked(2);
-			reportLocation(l); // 向系统汇报
-		}
-	}
-
-	@Override
-	public void onStatusUpdate(String name, int status, String desc) {
-		// ignore
-	}
-
-	// =================== callback method from TencentLocationListener
-
-	private void handleEnable() {
-		if (!mSystemNlpEnabled) {
-			if (App.CONFIG_DONT_SHOW_ALERT) {
-				Debug.i(TAG, "handleEnable: skip AlertActivity");
-				userConfirm(true);
-			} else {
-				// TODO 兼容 google 应用
-				Debug.i(TAG, "handleEnable: start AlertActivity");
-				AlertActivity.start(mContext);
-			}
-		}
-	}
-
-	private void handleDisable() {
-		Debug.i(TAG, "handleDisable");
-
-		enableSystemNlp(false);
-		// TODO
-		updateStatusLocked(1);
-	}
-
-	private void handleSetMinTime() {
-
-		// synchronized (mLock) {
-			// important 调整定位周期
-			final int i = mMinTimeSeconds;
-
-			if (i > 3600) {
-				Debug.i(TAG, "handleSetMinTime: stop location");
-				mLocationManager.removeUpdates(this); // 周期太长的话, 直接取消定位
-			} else {
-				Debug.i(TAG, "handleSetMinTime: set sdk interval to " + mMinTimeSeconds + " s");
-				mLocationRequest.setInterval(i * 1000); // 否则, 仅更新定位周期
-			}
-		// }
+		mProxy.onUpdateNetworkState(state, info);
 	}
 
 	private void enableSystemNlp(boolean enabled) {
-		mSystemNlpEnabled = enabled;
-		LegacyWrapper.setNetworkLocationProviderEnabled(mContext, enabled);
-		if (enabled) {
-			// setUserConfirmedPreference(true);
-			// TODO
-		}
-	}
-
-	private void updateStatusLocked(int newStatus) {
-		if (this.mStatus != newStatus) {
-			this.mStatus = newStatus;
-			this.mStatusUpdateTime = SystemClock.elapsedRealtime();
-		}
+		mProxy.enableSystemNlp(enabled);
 	}
 
 	public static void userConfirm(boolean enabled) {
@@ -285,30 +90,4 @@ public class TencentLocationProvider extends BaseTencentLocationProvider
 			sInstance.enableSystemNlp(enabled);
 		}
 	}
-
-	@SuppressLint("HandlerLeak")
-	private final class ProviderHandler extends Handler {
-		private static final int MSG_ID_DISABLE = 2;
-		private static final int MSG_ID_ENABLE = 1;
-		private static final int MSG_ID_SET_MIN_TIME = 3;
-
-		private ProviderHandler() {
-		}
-
-		public void handleMessage(Message paramMessage) {
-			switch (paramMessage.what) {
-
-			case MSG_ID_ENABLE:
-				handleEnable();
-				break;
-			case MSG_ID_DISABLE:
-				handleDisable();
-				break;
-			default:
-				handleSetMinTime();
-				break;
-			}
-		}
-	}
-
 }

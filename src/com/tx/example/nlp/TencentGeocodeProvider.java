@@ -1,4 +1,4 @@
-package com.tx.example.nlp._40;
+package com.tx.example.nlp;
 
 import java.util.List;
 import java.util.Locale;
@@ -7,6 +7,7 @@ import android.content.Context;
 import android.location.Address;
 import android.location.GeocoderParams;
 
+import com.android.location.provider.GeocodeProvider;
 import com.tencent.tencentmap.mapsdk.map.GeoPoint;
 import com.tencent.tencentmap.mapsdk.search.GeocoderSearch;
 import com.tencent.tencentmap.mapsdk.search.PoiItem;
@@ -14,10 +15,9 @@ import com.tencent.tencentmap.mapsdk.search.PoiResults;
 import com.tencent.tencentmap.mapsdk.search.PoiSearch;
 import com.tencent.tencentmap.mapsdk.search.ReGeocoderResult;
 import com.tencent.tencentmap.mapsdk.search.ReGeocoderResult.ReGeocoderAddress;
-import com.tx.example.nlp.BaseTencentGeocodeProvider;
 import com.tx.example.nlp.util.Debug;
 
-public class TencentGeocodeProvider extends BaseTencentGeocodeProvider {
+public class TencentGeocodeProvider extends GeocodeProvider {
 
 	private static final String TAG = TencentGeocodeProvider.class
 			.getSimpleName();
