@@ -42,7 +42,7 @@ public class Utils {
 			return false;
 		}
 		if (Build.VERSION.SDK_INT >= 18) {
-			return wifiManager.isScanAlwaysAvailable();
+			return wifiManager.isScanAlwaysAvailable() || wifiManager.isWifiEnabled();
 		} else {
 			return wifiManager.isWifiEnabled();
 		}
