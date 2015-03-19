@@ -1,0 +1,33 @@
+# 编译定位SDK时应加入以下配置, 以共用部分代码
+
+-keep class com.tencent.map.geolocation.info.TxCellInfo {
+	*;
+}
+
+-keep class com.tencent.map.geolocation.util.SosoLocUtils {
+	*;
+}
+
+-keep class com.tencent.map.geolocation.util.Wifis {
+	*;
+}
+
+-keep class com.tencent.map.geolocation.util.Cells {
+	*;
+}
+
+-keep class com.tencent.map.geolocation.exp.AppContext {
+	*;
+}
+
+-keep class com.tencent.map.geolocation.exp.AppStatus {
+	*;
+}
+
+-keep class com.tencent.map.geolocation.util.Files {
+	*;
+}
+
+-keep class com.tencent.map.geolocation.util.Networks {
+	*;
+}
