@@ -44,7 +44,7 @@ public class TencentGpsCache {
 		String result = Utils.createMappingData(mContext, location, aps, cellInfo);
 		Debug.i(TAG, "addToCache: " + result);
 		byte[] encryted = SosoLocUtils.encryptBytes(result.getBytes());
-
+		// encryted = result.getBytes();
 		try {
 			Files.append(encryted, mCache);
 		} catch (IOException e) {
@@ -58,5 +58,9 @@ public class TencentGpsCache {
 
 	public boolean delete() {
 		return mCache.delete();
+	}
+
+	public File getFile() {
+		return mCache;
 	}
 }
